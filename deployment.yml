@@ -1,0 +1,31 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+   name: rmservices
+   namespace: remarketer-prod
+   annotations:
+     deployment.method: concord
+spec:       
+   replicas: 5
+   selector:
+      matchlabels:
+        app: rmservices
+   revisionHistoryLimit: 10        
+   template:
+     metadata:
+       annotations:
+          deployment.method: concord 
+       labels: 
+          app: rmservices     
+     spec: 
+       containers: 
+       - name: rmservices
+         image: prodsupplychainakscommonscr.azurecr.io/prodsupplychainakscommonscr/rmservices:0.0.1-SNAPSHOT-PROD
+         imagePullPolicy: Always
+         env:
+         - name: OPERATING_ENV
+           value: prod
+         ports:
+         - containerPort: 8080
+       restartPolicy: Always         
